@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"> {% include 'clixove_org/header.html' %}
+
+<body>
+	<script>
+	function check_all(class_name) {
+		const cbs = document.getElementsByName(class_name);
+		cbs.forEach(
+			(cb) => {
+				cb.checked = 'checked';
+			});
+	}
+	</script> {% include 'clixove_org/navigator.html' %}
+	<div class="container-md">
+		<div class="row">
+			<div class="col-md-12">
+				<legend class="mt-4">Admission</legend>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-md-12">
+				<form action="/mylogin/admit/" method="post">
+					<table class="table table-borderless table-hover">
+						<thead>
+							<tr>
+								<th scope="col"></th>
+								<th scope="col">Group</th>
+								<th scope="col">Description</th>
+							</tr>
+						</thead>
+						<tbody> {% for x in NewUserTable %}
+							<tr>
+								<td>
+									<label>
+										<input class="form-check-input" type="checkbox" name="application"
+                                               value="{{ x.id }}" />
+                                    </label>
+								</td>
+								<td>{% for g in x.group.all %}{{ g.name }}<br>{% endfor %}</td>
+								<td>{{ x.bio | linebreaks}}</td>
+							</tr> {% endfor %} </tbody>
+					</table>
+					<input type="submit" name="action" value="Admit" class="btn btn-outline-success mb-1 btn1">
+					<input type="submit" name="action" value="Reject" class="btn btn-outline-danger mb-1 btn1">
+					<input type="reset" value="Clear" class="btn btn-outline-primary mb-1 btn1">
+					<input type="button" onclick="check_all('application')" value="Ck All"
+                           class="btn block-center btn-outline-primary mb-1 btn1">
+                </form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<p class="text-muted mt-4">To go back to library, click "Home" button on navigator bar.</p>
+			</div>
+		</div>
+	</div>
+	<div style="height: 80px"></div> {% include 'clixove_org/copyright.html' %} </body>
+
+</html>

@@ -1,0 +1,32 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark sticky-top p-0">
+  <div class="container-fluid">
+    <label class="navbar-brand" style="z-index:-1;">Clixove</label>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+              aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="/admin">Backend</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/mylogin/register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/library">Home</a>
+        </li>
+
+      </ul>
+      <ul class="navbar-nav d-flex">
+          <li class="nav-item text-nowrap">
+              <a class="nav-link">Hello, {{ request.user }}</a>
+          </li>
+          <li class="nav-item text-nowrap">
+              <a class="nav-link" href="/mylogin/logout">Sign Out</a>
+          </li>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+{% include 'clixove_org/header.html' %}
+<body>
+{% include 'clixove_org/navigator.html' %}
+<div class="container-md">
+    <br>
+    <legend>Causing errors</legend>
+    <p>Your action in the page before caused a problem, which can not be repaired automatically.</p>
+    <p>The related information is as follows:</p>
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-light">Error Message</div>
+        <div class="card-body">
+            {{ hint_info | linebreaks }}
+        </div>
+    </div>
+    <p>If you have any other questions, please contact the website founder:
+        <a href="mailto:19215988@163.com">19215988@163.com</a>
+    </p>
+    <p>Click the "Back" button to review the page before.</p>
+    <a href="/{{ retrieve }}" role="button" class="btn btn-outline-primary">Back</a>
+
+</div>
+{% include 'clixove_org/copyright.html' %}
+</body>
+</html>
