@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from ClixoveLibrary.constant import bs5_input
+from mylogin.constant import bs5_input
 from .models import *
 
 
@@ -14,15 +14,14 @@ class ShareBox(forms.Form):
                                 "onkeydown": "search1(event)",
                                 **bs5_input}),
         required=False,
-        help_text="<small class=\"text-muted\">Press \"Enter\" to search by other's username.<br>"
+        help_text="<small class=text-muted>Press “Enter” to search by other's username.<br>"
                   "You can only find people in your groups.</small>",
         label="Find people",
     )
     users = forms.MultipleChoiceField(
         widget=forms.SelectMultiple({"id": "share-user-answer", **bs5_input}),
         choices=[], required=False, label="Share with",
-        help_text="<small class=\"text-muted\">Press `Ctrl` to select multiple values. <br> Press `Shift` "
-                  "to select continuous values.</small>"
+        help_text="<small class=text-muted>Hold down “Control”, or “Command” on a Mac, to select more than one.</small>"
     )
 
     def load_choices(self, name_search, user):

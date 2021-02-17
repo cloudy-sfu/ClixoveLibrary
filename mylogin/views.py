@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from ClixoveLibrary.constant import bs5_input
+from mylogin.constant import bs5_input
 from .models import Register
 
 
@@ -67,8 +67,8 @@ class RegisterSheet(forms.Form):
         Group.objects.all(),
         widget=forms.SelectMultiple(bs5_input),
         required=True,
-        help_text="<small class=text-muted>Press `Ctrl` to select multiple values.<br>Press `Shift` to select "
-                  "continuous values.</small>"
+        help_text="<small class=text-muted>Hold down “Control”, or “Command” on a Mac, to select more "
+                  "than one.</small>"
     )
 
 
@@ -106,14 +106,15 @@ def mylogout(req):
 
 @permission_required('mylogin.view_register', login_url='/library')
 def waitlist_view(req):
+    groups = req.user.groups.all()
     context = {
-        'NewUserTable': Register.objects.filter(group__in=req.user.groups.all()),
+        'NewUserTable': Register.objects.filter(group__in=groups).distinct(),
     }
     return render(req, "mylogin/admission.html", context)
 
 
 class ReceivedApplication(forms.Form):
-    action = forms.ChoiceField(choices=('Admit', 'Reject'))
+    action = forms.ChoiceField(choices=[('Admit', 'Reject')])
 
     def load_choices(self, user):
         groups = user.groups.all()
@@ -125,6 +126,7 @@ class ReceivedApplication(forms.Form):
 @require_POST
 def admit(req):
     ra = ReceivedApplication(req.POST)
+    ra.load_choices(req.user)
     if not ra.is_valid():
         return redirect("/traceback/sheet-not-valid/admission")
     if ra.cleaned_data['action'] == 'Reject':
@@ -136,10 +138,10 @@ def admit(req):
             if created:
                 new_user.set_password(application.password)
                 new_user.save()
-                new_user.groups.set(application.group)
+                new_user.groups.set(application.group.all())
             else:
                 user = authenticate(username=application.username, password=application.password)
                 if user:
-                    user.groups.set(user.groups.all() | application.group)
+                    user.groups.set(user.groups.all() | application.group.all())
             application.delete()
     return redirect('/library')

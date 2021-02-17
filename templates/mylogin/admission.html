@@ -24,6 +24,7 @@
 						<thead>
 							<tr>
 								<th scope="col"></th>
+                                <th scope="col">Username</th>
 								<th scope="col">Group</th>
 								<th scope="col">Description</th>
 							</tr>
@@ -36,6 +37,7 @@
                                                value="{{ x.id }}" />
                                     </label>
 								</td>
+                                <td>{{ x.username }}</td>
 								<td>{% for g in x.group.all %}{{ g.name }}<br>{% endfor %}</td>
 								<td>{{ x.bio | linebreaks}}</td>
 							</tr> {% endfor %} </tbody>

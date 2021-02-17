@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from ClixoveLibrary.constant import bs5_input
+from mylogin.constant import bs5_input
 from papershare.models import ShareLink
 from papershare.views import ShareBox
 from .models import *
