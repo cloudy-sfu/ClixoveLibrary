@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from mylogin.constant import bs5_input
+from constant import bs5_input
 from .models import Register
 
 
@@ -29,12 +29,14 @@ def login_view(req):
 def mylogin(req):
     sheet1 = LoginSheet(req.POST)
     if not sheet1.is_valid():
-        return redirect('/traceback/login-form-not-valid/home')
+        return redirect("/traceback?hint_info=Login form is not valid."
+                        "&retrieve=home")
     user = authenticate(req,
                         username=sheet1.cleaned_data['username'],
                         password=sheet1.cleaned_data['password'])
     if not user:
-        return redirect('/traceback/password-error/home')
+        return redirect("/traceback?hint_info=Username or password is not correct."
+                        "&retrieve=home")
     login(req, user)
     return redirect('/library')
 
@@ -87,7 +89,8 @@ def register(req):
         register_sheet.is_valid() and
         register_sheet.cleaned_data['password'] == register_sheet.cleaned_data['password_again']
     ):
-        return redirect('/traceback/register-form-not-valid/register')
+        return redirect("/traceback?hint_info=Two fields of password are not the same, or the form is not valid."
+                        "&retrieve=mylogin/register")
     new_register = Register(
         username=register_sheet.cleaned_data['username'],
         password=register_sheet.cleaned_data['password'],
@@ -114,7 +117,7 @@ def waitlist_view(req):
 
 
 class ReceivedApplication(forms.Form):
-    action = forms.ChoiceField(choices=[('Admit', 'Reject')])
+    action = forms.ChoiceField(choices=[('Admit', None), ('Reject', None)])
 
     def load_choices(self, user):
         groups = user.groups.all()
@@ -128,7 +131,8 @@ def admit(req):
     ra = ReceivedApplication(req.POST)
     ra.load_choices(req.user)
     if not ra.is_valid():
-        return redirect("/traceback/sheet-not-valid/admission")
+        return redirect(f"/traceback?hint_info=The submission is not valid. {ra.errors}"
+                        "&retrieve=mylogin/waitlist/")
     if ra.cleaned_data['action'] == 'Reject':
         for application in ra.cleaned_data['application']:
             application.delete()

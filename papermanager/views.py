@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from mylogin.constant import bs5_input
+from constant import bs5_input
 from papershare.models import ShareLink
 from papershare.views import ShareBox
 from .models import *
@@ -30,19 +30,21 @@ class AddPaperSheet(forms.Form):
 @require_POST
 @csrf_exempt
 def add_paper(req):
-    add_paper_sheet = AddPaperSheet(req.POST, req.FILES)
-    add_paper_sheet.load_project_menu(req.user)
-    if not add_paper_sheet.is_valid():
-        return redirect('/traceback/sheet-not-valid/add-paper')
+    aps = AddPaperSheet(req.POST, req.FILES)
+    aps.load_project_menu(req.user)
+    if not aps.is_valid():
+        return redirect(f'traceback?hint_info=Submission is not valid. {aps.errors}'
+                        f'&retrieve=library')
     new_paper = Paper(
         user=req.user,
-        file=add_paper_sheet.cleaned_data['file']
+        file=aps.cleaned_data['file']
     )
     new_paper.save()
-    new_paper.project.set(add_paper_sheet.cleaned_data['project'])
+    new_paper.project.set(aps.cleaned_data['project'])
     my_storage = UserStorage.objects.get(user=req.user)
     if not my_storage.upload_permission(new_paper.file):
-        return redirect('/traceback/file-exceed/library')
+        return redirect(f'traceback?hint_info=You storage has used up, and there isn\'t enough space for this file.'
+                        f'&retrieve=library')
     new_paper.save()
     return redirect('/library')
 
@@ -62,7 +64,8 @@ class NewLabelSheet(forms.Form):
 def add_label(req):
     new_project_raw = NewLabelSheet(req.POST)
     if not new_project_raw.is_valid():
-        return redirect('/traceback/sheet-not-valid/library')
+        return redirect(f'traceback?hint_info=Submission is not valid. {new_project_raw.errors}'
+                        f'&retrieve=library')
     new_project = Project(user=req.user, name=new_project_raw.cleaned_data['name'])
     new_project.save()
     return redirect('/library/projects')
@@ -102,7 +105,8 @@ def delete_label(req):
     dps = DeleteProjectSheet(req.POST)
     dps.load_choices(req.user)
     if not dps.is_valid():
-        redirect('traceback/sheet-not-valid/projects')
+        return redirect(f'traceback?hint_info=Submission is not valid. {dps.errors}'
+                        f'&retrieve=library/projects')
     for project in dps.cleaned_data['project']:
         project.delete()
     return redirect('/library/projects')
@@ -130,7 +134,8 @@ def change_papers(req):
     cps = ChangePaperSheet(req.POST)
     cps.load_choices(req.user)
     if not cps.is_valid():
-        return redirect('/traceback/sheet-not-valid/library')
+        return redirect(f'traceback?hint_info=Submission is not valid. {cps.errors}'
+                        f'&retrieve=library')
     if cps.cleaned_data['action'] == 'Delete' and \
             req.user.has_perm('papermanager.delete_paper'):
         for paper in cps.cleaned_data['paper']:

@@ -1,7 +1,7 @@
 # ClixoveLibrary
-A Personal Academic Paper Library
+A Team Knowledge Base for Academic Paper
 
-![](https://img.shields.io/badge/dependencies-Django%203.1.5-blue)
+![](https://img.shields.io/badge/dependencies-Django%203.1.6-blue)
 ![](https://img.shields.io/badge/dependencies-bootstrap%205.0-blue)
 
 ## Introduction
@@ -13,9 +13,6 @@ Therefore, our program includes:
 - Manage papers classified by research projects
 - Manage research projects
 - Manage a team
-- Preview papers by Chromium browser
-
-These features can be added (but not in the plan):
 - Sharing papers in a team
 
 These features are comming soon:
@@ -36,7 +33,7 @@ These features are planned to be developed:
 4. Run:
 ```
 pip install -r requirement
-python ClixoveLibrary/build_file_tree.py
+python build_file_tree.py
 python manage.py migrate
 python manage.py runserver localhost:8000
 ```

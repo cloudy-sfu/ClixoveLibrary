@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from mylogin.constant import bs5_input
+from constant import bs5_input
 from .models import *
 
 
@@ -79,7 +79,8 @@ def delete_label(req):
     dps = DeleteProjectSheet(req.POST)
     dps.load_choices(req.user)
     if not dps.is_valid():
-        redirect('traceback/sheet-not-valid/share')
+        return redirect(f'traceback?hint_info=Submission is not valid. {dps.errors}'
+                        f'&retrieve=share')
     for project in dps.cleaned_data['project']:
         project.delete()
     return redirect('/share')

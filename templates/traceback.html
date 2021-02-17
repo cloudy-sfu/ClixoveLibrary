@@ -11,7 +11,7 @@
     <div class="card border-danger">
         <div class="card-header bg-danger text-light">Error Message</div>
         <div class="card-body">
-            {{ hint_info | linebreaks }}
+            {{ hint_info | safe }}
         </div>
     </div>
     <p>If you have any other questions, please contact the website founder:

@@ -13,20 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path
 
-from .constant import traceback
 import mylogin.views as v1
 import papermanager.views as v2
 import papershare.views as v3
+from constant import traceback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # traceback
-    path('traceback/<str:guidance>/<str:retrieve>', traceback),
+    path('traceback', traceback),
     # mylogin
     path('home/', v1.login_view),
     path('mylogin/login/', v1.mylogin),
