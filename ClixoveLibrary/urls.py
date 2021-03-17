@@ -21,31 +21,31 @@ from django.urls import path
 import mylogin.views as v1
 import papermanager.views as v2
 import papershare.views as v3
-from constant import traceback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # traceback
-    path('traceback', traceback),
-    # mylogin
+    # my login
+    path('traceback', v1.track_errors),
     path('home/', v1.login_view),
-    path('mylogin/login/', v1.mylogin),
+    path('mylogin/login/', v1.my_login),
     path('mylogin/register/', v1.register_view),
     path('mylogin/applyreg/', v1.register),
-    path('mylogin/logout/', v1.mylogout),
-    path('mylogin/waitlist/', v1.waitlist_view),
+    path('mylogin/logout/', v1.my_logout),
+    path('mylogin/admission/', v1.admission_view),
     path('mylogin/admit/', v1.admit),
-    # papermanager
-    path('library/', v2.library_view),
+    # paper manager
+    path('library/label', v2.view_label),
+    path('library/add-label', v2.add_label),
+    path('library/delete-label', v2.delete_label),
+    path('library/rename-label', v2.rename_label),
+    path('library/', v2.view_paper),
     path('library/add-paper', v2.add_paper),
-    path('library/change-paper', v2.change_papers),
-    path('library/projects', v2.labels_view),
-    path('library/add-project', v2.add_label),
-    path('library/delete-project', v2.delete_label),
-    # papershare
-    path('share', v3.shared_link_view),
-    path('share/share-user-search', v3.shared_user_search),
-    path('share/change-links', v3.delete_label),
+    path('library/delete-paper', v2.delete_paper),
+    path('library/change-label', v2.change_paper_s_label),
+    # paper share
+    path('share', v3.view_link_list),
+    path('share/add-link', v3.add_link),
+    path('share/link/id=<str:id_>', v3.view_link),
+    path('share/list-link', v3.view_link_list),
 ]
-
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

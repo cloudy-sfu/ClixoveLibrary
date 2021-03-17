@@ -16,5 +16,5 @@ class PaperAdmin(admin.ModelAdmin):
 
 admin.site.register(GroupStorage, GroupStorageAdmin)
 admin.site.register(UserStorage, UserStorageAdmin)
-admin.site.register(Project)
+admin.site.register(Label)
 admin.site.register(Paper)

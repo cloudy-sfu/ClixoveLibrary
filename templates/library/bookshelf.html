@@ -1,135 +1,127 @@
-<script>
-function check_all(class_name) {
-	const cbs = document.getElementsByName(class_name);
-	cbs.forEach(
-		(cb) => {
-			cb.checked = 'checked';
-		});
-}
-
-function search1(event) {
-	if(event.which === 13) {
-		let search_content = document.getElementById('share-user-question').value;
-		let shared_user_list = [];
-		for(let opt of document.getElementById('share-user-answer').options) {
-			if(opt.selected) {
-				shared_user_list.push(opt.value);
-			}
-		}
-		let params = {
-			search_content: search_content,
-			shared_user_: shared_user_list,
-		}
-		if(search_content.trim().length > 0) {
-			let my_request = new XMLHttpRequest();
-			my_request.onreadystatechange = function() {
-				if(this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-					document.getElementById('share-user-box').innerHTML = this.responseText;
-				}
-			}
-			my_request.open("GET", "/share/share-user-search?" + jQuery.param(params), true);
-			my_request.send();
-		}
-	}
-}
-// prevent the form from submitting when searching
-$(document).ready(function() {
-    $('form').keydown(function(event){
-        if(event.which === 13) {
-            event.preventDefault();
-            return false;
-        }
-    });
-});
-</script>
-<div class="row">
-	<div class="col-12" style="overflow-x: auto">
-		<form action="/library/change-paper" method="post">
-			<table class="table table-borderless table-hover">
-                <caption class="caption-top">My Documents</caption>
-				<thead>
-					<tr>
-						<th></th>
-						<th>Labels</th>
-						<th>Name</th>
-						<th>Size</th>
-					</tr>
-				</thead>
-				<tbody> {% for paper in Papers %}
-					<tr>
-						<td>
-							<label>
-								<input type="checkbox" class="form-check-input" name="paper" value="{{ paper.id }}" />
-                            </label>
-						</td>
-						<td> {% for pj in paper.project.all %} {{ pj.name }}; {% endfor %} </td>
-						<td><a href="{{ paper.file.url }}" style="text-decoration: none;" class="text-dark">
-                            {{ paper.file.name }}
-                        </a> </td>
-						<td> {{ paper.file.size | filesizeformat }} </td>
-					</tr> {% endfor %} </tbody>
-			</table>
-			<input type="reset" value="Clear" class="btn btn-outline-dark mb-1 btn1">
-			<input type="button" onclick="check_all('paper')" value="Ck All" class="btn block-center btn-outline-dark mb-1 btn1">
-			<input type="submit" name="action" value="Delete" class="btn btn-outline-danger mb-1 btn1">
-            <a type="button" class="btn btn-outline-success mb-1 btn1" data-bs-toggle="modal" data-bs-target="#moveTo">
-                Move
-            </a>
-            <a type="button" class="btn btn-outline-primary mb-1 btn1" data-bs-toggle="modal" data-bs-target="#searchUser">
-                Share
-            </a>
-			<!-- Modal -->
-			<div class="modal fade" id="moveTo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="newProjectLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="newProjectLabel">Move To</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body"> {{ MoveTo.as_p }} </div>
-						<div class="modal-footer">
-							<input type="submit" name="action" value="Move" class="btn btn-outline-success"> </div>
-					</div>
-				</div>
-			</div>
-			<div class="modal fade" id="searchUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="newProjectLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="newProjectLabel">Invite</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body" id="share-user-box"> {{ shared_sheet.as_p }} </div>
-						<div class="modal-footer">
-							<input type="submit" name="action" value="Share" class="btn btn-outline-primary">
-                        </div>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
-</div>
-<div class="row">
-	<div class="col-12" style="overflow-x: auto">
-		<table class="table table-borderless table-hover">
-            <caption class="caption-top mt-4">Shared with me</caption>
-			<thead>
-				<tr>
-					<th>Owner</th>
-					<th>Name</th>
-				</tr>
-			</thead>
-			<tbody>
-            {% for paper in shared_paper %}
-				<tr>
-					<td>{{ paper.user.username }}</td>
-					<td><a href="{{ paper.file.url }}" style="text-decoration: none;" class="text-dark">
-                                {{ paper.file.name }}
-                        </a>
+<form>
+    <div style="overflow-x: auto;">
+        <table class="table table-borderless table-hover">
+            <caption class="caption-top">
+                My Documents
+            </caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Labels</th>
+                    <th>Name</th>
+                    <th>Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paper in Papers %}
+                <tr>
+                    <td>
+                        <label><input type="checkbox" class="form-check-input" name="papers" value="{{ paper.id }}" /></label>
                     </td>
-				</tr>
-            {% endfor %}
+                    <td>{% for lb in paper.labels.all %} {{ lb.name }}; {% endfor %}</td>
+                    <td>
+                        <a href="{{ paper.file.url }}" class="text-dark">{{ paper.filename }}</a>
+                    </td>
+                    <td>{{ paper.file.size | filesizeformat }}</td>
+                </tr>
+                {% endfor %}
             </tbody>
-		</table>
-	</div>
+        </table>
+    </div>
+    <input type="reset" class="btn btn-light mb-1" value="❌" />
+    <input type="button" onclick="check_all('papers')" value="✔" class="btn btn-light mb-1" />
+</form>
+
+<!-- Advance function module -->
+<button type="button" class="btn btn-outline-danger mb-1" data-bs-toggle="modal" data-bs-target="#deletePaper"
+        onclick="copy_selected_instances('papers', 'delete-paper-signal')">
+    Delete Paper
+</button>
+<button type="button" class="btn btn-outline-success mb-1" data-bs-toggle="modal" data-bs-target="#newPaper">
+    Add Paper
+</button>
+<button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#changeLabel"
+        onclick="copy_selected_instances('papers', 'change-label-signal')">
+    Change Label
+</button>
+<button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#share"
+        onclick="copy_selected_instances('papers', 'share-signal')">
+    Share
+</button>
+
+<!-- Submission module -->
+<div class="modal fade" id="deletePaper" tabindex="-1" aria-labelledby="deletePaperLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <strong class="modal-title" id="deletePaperLabel">Delete</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/library/delete-paper" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p>Are you sure to delete these papers?</p>
+                    <div id="delete-paper-signal" hidden></div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-danger" value="Yes" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="newPaper" tabindex="-1" aria-labelledby="newPaperLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <strong class="modal-title" id="newPaperLabel">New Paper</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/library/add-paper" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    {{ AddPaper.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Add" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="changeLabel" tabindex="-1" aria-labelledby="changeLabelModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <strong class="modal-title" id="changeLabelModal">Change Label</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/library/change-label" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    {{ ChangeLabel.as_p }}
+                    <div id="change-label-signal" hidden></div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Yes" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="share" tabindex="-1" aria-labelledby="shareModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <strong class="modal-title" id="shareModal">Share</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/share/add-link" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p>Are you sure to share these papers?</p>
+                    <div id="share-signal" hidden></div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Yes" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

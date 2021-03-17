@@ -1,24 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-{% include 'clixove_org/header.html' %}
-<body>
-{% include 'clixove_org/navigator.html' %}
-<div class="container-md">
-    <div class="row">
-        <legend class="mt-4">Register</legend>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form action="/mylogin/applyreg/" method="post">
-                {{ RegisterSheet.as_p }}
-                <a role="button" class="btn btn-outline-primary" href="/home">Back</a>
-                <input type="submit" class="btn btn-outline-success">
-            </form>
+    {% include 'clixove_org/header.html' %}
+    <body>
+        {% include 'clixove_org/navigator.html' %}
+        <div class="container-md">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="bd-callout bd-callout-logos d-flex justify-content-between">
+                        <strong>Register</strong>
+                        <a href="/home" style="text-decoration: none;">Back</a>
+                    </p>
+                    <form action="/mylogin/applyreg/" method="post">
+                        {{ RegisterSheet.as_p }}
+                        <input type="submit" class="btn btn-outline-success" />
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-
-</div>
-<div style="height: 80px"></div>
-{% include 'clixove_org/copyright.html' %}
-</body>
+        <div style="height: 80px;"></div>
+        {% include 'clixove_org/copyright.html' %}
+    </body>
 </html>

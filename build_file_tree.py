@@ -1,7 +1,4 @@
 import os
 
-if not os.path.exists('storage'):
-    os.mkdir('storage')
-
-if not os.path.exists('storage/papers'):
-    os.mkdir('storage/papers')
+content = ["storage", "storage/papers", "storage/static"]
+[os.mkdir(x) for x in content if not os.path.exists(x)]

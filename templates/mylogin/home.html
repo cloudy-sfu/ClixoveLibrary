@@ -1,27 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-{% include 'clixove_org/header.html' %}
-<body>
-    {% include 'clixove_org/navigator.html' %}
-    <div class="container-fluid">
-        <div class="row lh-lg justify-content-center">
-            <div class="col-md-6">
-                <div class="text-center mt-5">
-              <h1 class="display-4">Plato</h1>
-              <p class="lead">A Team Knowledge Base for Academic Paper</p>
-              <hr class="m-4">
+    {% include 'clixove_org/header.html' %}
+    <body>
+        {% include 'clixove_org/navigator.html' %}
+        <div class="container-fluid">
+            <div class="row lh-lg justify-content-center">
+                <div class="col-md-6">
+                    <div class="text-center mt-5">
+                        <h1 class="display-4">Plato</h1>
+                        <p class="lead">The Academic Paper Library and Analyzer</p>
+                        <hr class="m-4" />
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-4" style="min-width: 400px; max-width: 400px;">
+                    <form action="/mylogin/login/" method="post">
+                        {{ LoginSheet.as_p }}
+                        <div class="text-center">
+                            <input class="btn btn-outline-success" type="submit" value="Login" />
+                        </div>
+                        <p>No account? <a href="/mylogin/register">Register</a></p>
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-md-4" style="min-width: 400px; max-width: 400px">
-                <form action="/mylogin/login/" method="post">
-                    {{ LoginSheet.as_p }}
-                    <div class="text-center"><input class="btn btn-success" type="submit" value="Login"></div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div style="height: 80px"></div>
-    {% include 'clixove_org/copyright.html' %}
-</body>
+        <div style="height: 80px;"></div>
+        {% include 'clixove_org/copyright.html' %}
+    </body>
 </html>

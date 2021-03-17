@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Group, User
 from django.conf.global_settings import MEDIA_ROOT
-from os.path import join
+from os.path import join, basename
 
 
 class GroupStorage(models.Model):
@@ -33,7 +33,7 @@ class UserStorage(models.Model):
         return sum([x.file.size for x in users_papers])
 
 
-class Project(models.Model):
+class Label(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
 
@@ -43,8 +43,11 @@ class Project(models.Model):
 
 class Paper(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ManyToManyField(Project)
+    labels = models.ManyToManyField(Label, blank=True)
     file = models.FileField(upload_to=join(MEDIA_ROOT, 'papers/'))
 
     def __str__(self):
         return self.file.name
+
+    def filename(self):
+        return basename(self.file.name)

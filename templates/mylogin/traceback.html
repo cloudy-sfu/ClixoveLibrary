@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'clixove_org/header.html' %}
+    <body>
+        {% include 'clixove_org/navigator.html' %}
+        <div class="container-md">
+            <br />
+            <p class="bd-callout bd-callout-logos d-flex justify-content-between">
+                <strong>Causing Errors</strong>
+                <a href="{{ retrieve }}" style="text-decoration: none;">Back</a>
+            </p>
+            <p>Your action in the page before caused a problem, which can not be repaired automatically.</p>
+            <p>The related information is as follows:</p>
+            <div class="bd-callout bd-callout-danger">
+                {{ hint_info | safe }}
+            </div>
+            <p>
+                If you have any other questions, please contact the website founder:
+                <a href="//github.com/cloudy-sfu/Clixove-Library/issues">me@clixove.org</a>
+            </p>
+        </div>
+        <div style="height: 80px;"></div>
+        {% include 'clixove_org/copyright.html' %}
+    </body>
+</html>

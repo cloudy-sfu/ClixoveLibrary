@@ -1,9 +1,9 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
 from papermanager.models import Paper
 
 
-class ShareLink(models.Model):
-    user_from = models.ForeignKey(User, on_delete=models.CASCADE)
-    users_to = models.ManyToManyField(User, related_name='+')
-    papers = models.ManyToManyField(Paper)
+class Link(models.Model):
+    from_user = models.ForeignKey(User, models.CASCADE, related_name="from_user")
+    to_user = models.ManyToManyField(User, blank=True, related_name="to_user")
+    papers = models.ManyToManyField(Paper, blank=True)

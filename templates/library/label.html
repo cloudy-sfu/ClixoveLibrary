@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'clixove_org/header.html' %}
+
+    <body>
+        {% include 'clixove_org/navigator.html' %}
+        <script>
+
+        </script>
+        <div class="container-md">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="bd-callout bd-callout-logos d-flex justify-content-between">
+                        <strong>Manage Labels</strong>
+                        <a href="/library" style="text-decoration: none;">Back</a>
+                    </p>
+                    <form>
+                        <table class="table table-borderless table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for x in LabelTable %}
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input class="form-check-input" type="checkbox" name="label" value="{{ x.id }}" />
+                                        </label>
+                                    </td>
+                                    <td>{{ x.name }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <input class="btn btn-light mb-1" type="reset" value="❌" />
+                        <input class="btn btn-light mb-1" type="button" value="✔" onclick="check_all('label')" />
+                    </form>
+
+                    <!-- Advance function module -->
+                    <a class="btn btn-outline-danger mb-1" type="button" data-bs-toggle="modal" data-bs-target="#DeleteLabelModal"
+                       onclick="copy_selected_instances('label', 'delete-label-signal')">
+                        Delete
+                    </a>
+                    <a class="btn btn-outline-success mb-1" type="button" data-bs-toggle="modal" data-bs-target="#NewLabelModal">
+                        New
+                    </a>
+                    <a class="btn btn-outline-primary mb-1" type="button" data-bs-toggle="modal" data-bs-target="#RenameLabelModal"
+                       onclick="copy_selected_instances('label', 'rename-label-signal')">
+                        Rename
+                    </a>
+
+                    <!-- Submission module -->
+                    <div class="modal fade" id="DeleteLabelModal" tabindex="-1" aria-labelledby="DeleteLabelModalTitle" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <strong class="modal-title" id="DeleteLabelModalTitle">Delete</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="/library/delete-label" method="post">
+                                    <div class="modal-body">
+                                        <p>Are you sure to delete these labels?</p>
+                                        <div id="delete-label-signal" hidden></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-danger" value="Yes" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="NewLabelModal" tabindex="-1" aria-labelledby="NewLabelModalTitle" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <strong class="modal-title" id="NewLabelModalTitle">New Label</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="/library/add-label" method="post">
+                                    <div class="modal-body">{{ NewLabel.as_p }}</div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-success" value="OK" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="RenameLabelModal" tabindex="-1" aria-labelledby="RenameLabelModalTitle" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <strong class="modal-title" id="RenameLabelModalTitle">Rename</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="/library/rename-label" method="post">
+                                    <div class="modal-body">
+                                        {{ RenameLabel.as_p }}
+                                        <div id="rename-label-signal" hidden></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-success" value="OK" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="height: 80px;"></div>
+        {% include 'clixove_org/copyright.html' %}
+    </body>
+</html>
