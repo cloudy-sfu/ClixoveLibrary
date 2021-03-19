@@ -193,12 +193,12 @@ def admit(req):
         return redirect(f"/traceback?hint_info=The submission is not valid. {ams.errors}"
                         "&retrieve=/mylogin/admission/")
     represented_group = ams.cleaned_data['group']
-    if ams.cleaned_data['action'] == 'A':
+    if ams.cleaned_data['action'] == 'R':
         for application in ams.cleaned_data['application']:
             application.group.remove(represented_group)
             if application.group.count() == 0:
                 application.delete()
-    elif ams.cleaned_data['action'] == 'R':
+    elif ams.cleaned_data['action'] == 'A':
         for application in ams.cleaned_data['application']:
             new_user, created = User.objects.get_or_create(username=application.username)
             if created:

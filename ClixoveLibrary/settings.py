@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'mylogin.apps.MyloginConfig',
     'papermanager.apps.PapermanagerConfig',
     'papershare.apps.PapershareConfig',
-    'searchableselect',
 ]
 
 MIDDLEWARE = [
