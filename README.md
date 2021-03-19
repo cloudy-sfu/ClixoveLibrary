@@ -2,7 +2,7 @@
 
 A Knowledge Induction Software for Academic Papers
 
-![](https://img.shields.io/badge/dependencies-bootstrap%205.0.0 beta2-blue)
+![](https://img.shields.io/badge/dependencies-bootstrap%205.0.0%20beta2-blue)
 
 ![](https://img.shields.io/badge/dependencies-python%203.8-blue)
 
