@@ -18,8 +18,6 @@ class TracebackForm(forms.Form):
     retrieve = forms.CharField()
 
 
-@csrf_exempt
-@login_required
 def track_errors(req):
     tf = TracebackForm(req.GET)
     if tf.is_valid():
