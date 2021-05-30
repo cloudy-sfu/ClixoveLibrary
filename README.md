@@ -22,7 +22,7 @@ Next step:
 
 **Intelligence -- Use neural networks to conclude knowledge.**
 
-The software is convenient to install extensions in fields of natural language processing. To be detailed, developers can add buttons in the library page in the paper management app, and imitate the "delete" or "share" function to create the new "analyze" function. The button will transmit the file path of selected academic papers to the main function of each advanced algorithm.
+The software is convenient to install extensions in fields of natural language processing. To be detailed, developers can add buttons in the library page in the paper management app, and imitate the "delete" function to create the new "analyze" function. The button will transmit the file path of selected academic papers to the main function of each advanced algorithm.
 
 With this tool, everyone is able to link neural network models to customize new text analysis algorithms, since Clixove Library is made by Python, and is compatible to these models.
 

@@ -1,63 +1,91 @@
-<form>
-    <div style="overflow-x: auto;">
-        <table class="table table-borderless table-hover">
-            <caption class="caption-top">
-                My Documents
-            </caption>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Labels</th>
-                    <th>Name</th>
-                    <th>Size</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for paper in Papers %}
-                <tr>
-                    <td>
-                        <label><input type="checkbox" class="form-check-input" name="papers" value="{{ paper.id }}" /></label>
-                    </td>
-                    <td>{% for lb in paper.labels.all %} {{ lb.name }}; {% endfor %}</td>
-                    <td>
-                        <a href="{{ paper.file.url }}" class="text-dark">{{ paper.filename }}</a>
-                    </td>
-                    <td>{{ paper.file.size | filesizeformat }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <input type="reset" class="btn btn-light mb-1" value="❌" />
-    <input type="button" onclick="check_all('papers')" value="✔" class="btn btn-light mb-1" />
-</form>
-
+<div style="overflow-x: auto;">
+<table class="table table-borderless table-hover">
+    <caption class="caption-top">
+        My Documents
+    </caption>
+    <thead>
+        <tr>
+            <th><label>
+                <input class="form-check-input" type="checkbox" onchange="check_all(this, 'papers')">
+            </label></th>
+            <th>Labels</th>
+            <th>Name</th>
+            <th>Size</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for paper in Papers %}
+        <tr>
+            <td><label>
+                <input type="checkbox" class="form-check-input" name="papers" value="{{ paper.id }}" />
+            </label></td>
+            <td>{% for lb in paper.labels.all %}
+                <label class="badge bg-secondary">{{ lb.name }}</label>
+            {% endfor %}</td>
+            <td>
+                <a href="{{ paper.file.url }}" class="text-dark">{{ paper.filename }}</a>
+            </td>
+            <td>{{ paper.file.size | filesizeformat }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
 <!-- Advance function module -->
-<button type="button" class="btn btn-outline-danger mb-1" data-bs-toggle="modal" data-bs-target="#deletePaper"
-        onclick="copy_selected_instances('papers', 'delete-paper-signal')">
-    Delete Paper
-</button>
-<button type="button" class="btn btn-outline-success mb-1" data-bs-toggle="modal" data-bs-target="#newPaper">
-    Add Paper
-</button>
-<button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#changeLabel"
-        onclick="copy_selected_instances('papers', 'change-label-signal')">
-    Change Label
-</button>
-<button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#share"
-        onclick="copy_selected_instances('papers', 'share-signal')">
-    Share
-</button>
+<div class="d-flex">
+    <p class="btn my-1">Manage Papers</p>
+    <button type="button" class="btn btn-outline-success m-1" data-bs-toggle="modal" data-bs-target="#addPaper">
+        Add
+    </button>
+    <button type="button" class="btn btn-outline-danger m-1" data-bs-toggle="modal" data-bs-target="#deletePaper"
+            onclick="copy_selected_instances('papers', 'delete-paper-signal')">
+        Delete
+    </button>
+</div>
+<div class="d-flex">
+    <p class="btn my-1">Edit Labels in Batch</p>
+    <button type="button" class="btn btn-outline-success m-1" data-bs-toggle="modal" data-bs-target="#addPaperLabel"
+            onclick="copy_selected_instances('papers', 'add-label-in-paper-signal')">
+        Add
+    </button>
+    <button type="button" class="btn btn-outline-danger m-1" data-bs-toggle="modal" data-bs-target="#deletePaperLabel"
+            onclick="copy_selected_instances('papers', 'delete-label-in-paper-signal')">
+        Remove
+    </button>
+    <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal" data-bs-target="#changePaperLabel"
+            onclick="copy_selected_instances('papers', 'change-label-in-paper-signal')">
+        Set To
+    </button>
+</div>
 
 <!-- Submission module -->
-<div class="modal fade" id="deletePaper" tabindex="-1" aria-labelledby="deletePaperLabel" aria-hidden="true">
+<div class="modal fade" id="addPaper" tabindex="-1" aria-labelledby="addPaper" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <strong class="modal-title" id="deletePaperLabel">Delete</strong>
+                <strong class="modal-title" id="addPaper">New Paper</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/library/delete-paper" method="post" enctype="multipart/form-data">
+            <form action="/library/paper/add" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    {{ AddPaperSheet.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Add" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deletePaper" tabindex="-1" aria-labelledby="deletePaper" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <strong class="modal-title" id="deletePaper">Delete</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/library/paper/delete" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <p>Are you sure to delete these papers?</p>
                     <div id="delete-paper-signal" hidden></div>
@@ -69,16 +97,18 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="newPaper" tabindex="-1" aria-labelledby="newPaperLabel" aria-hidden="true">
+
+<div class="modal fade" id="addPaperLabel" tabindex="-1" aria-labelledby="addPaperLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <strong class="modal-title" id="newPaperLabel">New Paper</strong>
+                <strong class="modal-title" id="addPaperLabel">Add Label</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/library/add-paper" method="post" enctype="multipart/form-data">
+            <form action="/library/label_in_paper/add" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
-                    {{ AddPaper.as_p }}
+                    {{ add_label_in_paper.as_p }}
+                    <div id="add-label-in-paper-signal" hidden></div>
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-success" value="Add" />
@@ -87,39 +117,41 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="changeLabel" tabindex="-1" aria-labelledby="changeLabelModal" aria-hidden="true">
+
+<div class="modal fade" id="deletePaperLabel" tabindex="-1" aria-labelledby="deletePaperLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <strong class="modal-title" id="changeLabelModal">Change Label</strong>
+                <strong class="modal-title" id="deletePaperLabel">Remove Label</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/library/change-label" method="post" enctype="multipart/form-data">
+            <form action="/library/label_in_paper/delete" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
-                    {{ ChangeLabel.as_p }}
-                    <div id="change-label-signal" hidden></div>
+                    {{ delete_label_in_paper.as_p }}
+                    <div id="delete-label-in-paper-signal" hidden></div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-success" value="Yes" />
+                    <input type="submit" class="btn btn-danger" value="Remove" />
                 </div>
             </form>
         </div>
     </div>
 </div>
-<div class="modal fade" id="share" tabindex="-1" aria-labelledby="shareModal" aria-hidden="true">
+
+<div class="modal fade" id="changePaperLabel" tabindex="-1" aria-labelledby="changePaperLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <strong class="modal-title" id="shareModal">Share</strong>
+                <strong class="modal-title" id="changePaperLabel">Set Labels To</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/share/add-link" method="post" enctype="multipart/form-data">
+            <form action="/library/label_in_paper/change" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <p>Are you sure to share these papers?</p>
-                    <div id="share-signal" hidden></div>
+                    {{ change_label_in_paper.as_p }}
+                    <div id="change-label-in-paper-signal" hidden></div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-success" value="Yes" />
+                    <input type="submit" class="btn btn-primary" value="Assign" />
                 </div>
             </form>
         </div>

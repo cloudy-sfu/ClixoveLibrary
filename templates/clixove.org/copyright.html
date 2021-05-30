@@ -1,0 +1,16 @@
+<div class="bg-light" style="position: fixed; bottom: 0; width: 100%; max-height: 10%; overflow-y: auto"
+     id="copyright">
+    <div class="d-flex justify-content-between">
+        <nav class="nav" id="copyright-left">
+            <a class="nav-link disabled" aria-disabled="true">&copy; Clixove 2018 - {% now "Y" %}</a>
+        </nav>
+        <nav class="nav" id="copyright-right">
+            <a class="nav-link active" href="/admin">Admin</a>
+        </nav>
+    </div>
+</div>
+<div id="copyright-bar-background"></div>
+<script>
+    copyright_height = document.getElementById("copyright").offsetHeight + 5;
+    document.getElementById("copyright-bar-background").setAttribute("style", "height: " + copyright_height + "px;");
+</script>

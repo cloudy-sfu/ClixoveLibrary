@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-0" id="clixove-navigator">
+  <div class="container-fluid">
+      <label class="navbar-brand">Clixove</label>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon btn-sm"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="/library/label">Labels</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav d-flex">
+          <li class="nav-item">
+              <a class="nav-link active">Login user: {{ request.user }}</a>
+          </li>
+          <li class="nav-item">
+              <a class="btn btn-sm btn-outline-danger my-1" href="/my_login/quit">
+                  Quit
+              </a>
+          </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% if request.GET.message %}
+<div role="alert" style="position: fixed; top: 0; width: 100%; z-index: 15;"
+     {% if request.GET.success %}
+     class="alert alert-success alert-dismissible fade show"
+     {% else %}
+     class="alert alert-danger alert-dismissible fade show"
+     {% endif %}
+>
+  <strong>Traceback:</strong> {{ request.GET.message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
